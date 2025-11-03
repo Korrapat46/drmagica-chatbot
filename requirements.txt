@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+openai>=1.44.0
+python-dotenv
+chromadb

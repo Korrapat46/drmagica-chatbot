@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: drmagica-api
+    env: python
+    plan: starter
+    region: singapore
+    buildCommand: |
+      pip install -r requirements.txt
+      python -u rag/ingest.py
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: llama-3.1-8b-instant
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: ALLOWED_ORIGINS
+        value: https://dr.magica,https://www.dr.magica
+      - key: EMBED_MODEL
+        value: BAAI/bge-small-en-v1.5
+      - key: CSV_COLUMNS
+        value: "*"
+      - key: SOURCES_DIR
+        value: /opt/render/project/src/data/sources
+      - key: CHROMA_DIR
+        value: /opt/render/project/src/data/chroma
+    disk:
+      name: rag-disk
+      mountPath: /opt/render/project/src/data
+      sizeGB: 2
